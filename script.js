@@ -1,35 +1,46 @@
+//Variable declarations
 var containerDiv = $(".container");
 
-var startTime = 6;
-var endTime = 19;
+var startHour = 6;
+var endHour = 19;
 
-function createTimeBlock(start, end) {
+//Function Definition 
+function renderDay(start, end) {
     for (var i = start; i < end; i++){
-        var timeBlock = $("<div>");
-        timeBlock.addClass("row border time-block");
-        var id = "hour" + i
-        timeBlock.addId(id);
-        var hourBlock = $("<div>");
-        hourBlock.addClass("col-2 hour")
-        hourBlock.text(i + ":00");
-        var textBlock = $("<div>");
-        textBlock.addClass("col-9 future");
-        textBlock.text("Example appointment");
-        var saveButton = $("<button>");
-        var buttonSpan = $("<span>");
-        buttonSpan.addClass("glyphicon-floppy-disk")
-        saveButton.addClass("col-1 saveBtn");
+        var hourBlockEl = renderHourBlock(i);
 
-
-
-
-        timeBlock.append(hourBlock);
-        timeBlock.append(textBlock);
-        timeBlock.append(saveButton);
-        containerDiv.append(timeBlock);
+        containerDiv.append(hourBlockEl);
     }
 }
 
+function renderHourBlock(i) {
+    var timeBlock = $("<div>");
+    timeBlock.addClass("row border time-block");
+    var id = "hour" + i
+    timeBlock.attr("id", id);
+    var hourBlock = $("<div>");
+    hourBlock.addClass("col-2 hour")
+    //TODO: Change hours
+    hourBlock.text(i + ":00");
+    var textBlock = $("<input>");
+    textBlock.addClass("col-9 future");
+    //TODO: Add appointment text
+    textBlock.text("Example appointment");
+    var saveButton = $("<button>");
+    var buttonSpan = $("<span>");
+    buttonSpan.text('🖫');
+    saveButton.addClass("col-1 saveBtn");
+    saveButton.append(buttonSpan);
+    timeBlock.append(hourBlock);
+    timeBlock.append(textBlock);
+    timeBlock.append(saveButton);
+    return timeBlock;
+}
+
+//Event Handler
+containerDiv.on("click", ".container", function(event){
+    //save data
+})
 
 //Function Calls
-createTimeBlock(startTime, endTime);
+renderDay(startHour, endHour);
