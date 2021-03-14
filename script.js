@@ -13,7 +13,8 @@ var daySchedule =
 
 //Function Definition 
 function renderDay(dayScheduleObject) {
-    for (var i = dayScheduleObject.startHour; i < dayScheduleObject.endHour; i++){
+       
+        for (var i = dayScheduleObject.startHour; i < dayScheduleObject.endHour; i++){
         var hourBlockEl = renderHourBlock(i);
 
         containerDiv.append(hourBlockEl);
@@ -27,12 +28,25 @@ function renderHourBlock(i) {
     timeBlock.data("hour", i);
     var hourBlock = $("<div>");
     hourBlock.addClass("col-2 hour")
-    //TODO: Change hours
-    hourBlock.text(i + ":00");
+    //var currentTime = moment().format("H");
+    //var hourBlockTime = moment().startOf("day").startOf(i)
+    //hourBlockTime.format("LLLL")
+    hourBlock.text(moment(i, "h").format("hA"));
     var textBlock = $("<input>");
+    //decide what class to give past, present, future
+    //var timeDifference = currentTime - hourBlockTime;
+    //console.log("hourBlock: "+hourBlockTime);
+    //console.log("time diff: "+timeDifference);
+    //if(currentTime.)
+
     textBlock.addClass("col-9 future");
-    //TODO: Add appointment text
-    textBlock.text("Example appointment");
+    if(daySchedule[i]){
+        textBlock.val(daySchedule[i]);
+        console.log("Proper Code");
+    }
+    else {
+        console.log("got here");
+    }
     var saveButton = $("<button>");
     saveButton.text('🖫');
     saveButton.addClass("col-1 saveBtn");
@@ -41,17 +55,30 @@ function renderHourBlock(i) {
     timeBlock.append(saveButton);
     return timeBlock;
 }
-//TODO: Fix event logic to get data from input
+
+function checkLocalStorage() {
+    if(localStorage.getItem("Schedule")){
+        daySchedule = JSON.parse(localStorage.getItem("Schedule"))
+        console.log("Local Storage Loaded")
+    }
+    else{
+        console.log("No Local Storage Found");
+    }
+
+}
 //Event Handler
 containerDiv.on("click", ".saveBtn", function(event){
     //gives hour that was clicked
     var hourClicked = $(this).parent().data("hour");
-    var hourInput = $(this).siblings();
-    //daySchedule[$(this).parent().data("hour")] = $(this).siblings().siblings[1].text;
-    console.log(hourClicked);
-    console.log(hourInput);
+    var hourInput = $(this).siblings("input").val();
+    if(hourInput){
+    daySchedule[hourClicked] = hourInput;
     console.log(daySchedule);
+    localStorage.setItem("Schedule", JSON.stringify(daySchedule));
+    }
 })
 
 //Function Calls
+checkLocalStorage();
 renderDay(daySchedule);//change to array of hourBlocks
+
