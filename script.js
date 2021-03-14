@@ -1,11 +1,10 @@
 //Variable declarations
 var containerDiv = $(".container");
+var currentDayEl = $("#currentDay");
 var daySchedule =
 {
-    startHour: 6,
-    endHour: 19,
-    
-
+    startHour: 8,
+    endHour: 17,
 }
 
 
@@ -13,8 +12,10 @@ var daySchedule =
 
 //Function Definition 
 function renderDay(dayScheduleObject) {
+
+    currentDayEl.text(moment().format("MMMM Do"))
        
-        for (var i = dayScheduleObject.startHour; i < dayScheduleObject.endHour; i++){
+        for (var i = dayScheduleObject.startHour; i <= dayScheduleObject.endHour; i++){
         var hourBlockEl = renderHourBlock(i);
 
         containerDiv.append(hourBlockEl);
@@ -28,24 +29,30 @@ function renderHourBlock(i) {
     timeBlock.data("hour", i);
     var hourBlock = $("<div>");
     hourBlock.addClass("col-2 hour")
-    //var currentTime = moment().format("H");
-    //var hourBlockTime = moment().startOf("day").startOf(i)
-    //hourBlockTime.format("LLLL")
-    hourBlock.text(moment(i, "h").format("hA"));
+    var hourBlockTime = moment(i, "h");
+    hourBlock.text(hourBlockTime.format("h A"));
     var textBlock = $("<input>");
+    currentTime = moment();
+    //Test time variable
+    //currentTime = moment(12, "h");
     //decide what class to give past, present, future
-    //var timeDifference = currentTime - hourBlockTime;
-    //console.log("hourBlock: "+hourBlockTime);
-    //console.log("time diff: "+timeDifference);
-    //if(currentTime.)
-
-    textBlock.addClass("col-9 future");
-    if(daySchedule[i]){
-        textBlock.val(daySchedule[i]);
-        console.log("Proper Code");
+    if(hourBlockTime.isBefore(currentTime)){
+        textBlock.addClass("col-9 past");
+    }
+    else if(hourBlockTime.isSame(currentTime)){
+        textBlock.addClass("col-9 present");
     }
     else {
-        console.log("got here");
+        textBlock.addClass("col-9 future");
+    }
+
+    //adds scheduled event if found in localStorage
+    if(daySchedule[i]){
+        textBlock.val(daySchedule[i]);
+        console.log("Schedule event found");
+    }
+    else {
+        console.log("No schedule event found");
     }
     var saveButton = $("<button>");
     saveButton.text('🖫');
